@@ -10,6 +10,11 @@
 
 #include <omnetpp.h>
 
+using omnetpp::cSimpleModule;
+using omnetpp::cTopology;
+using omnetpp::cMessage;
+using omnetpp::cStringTokenizer;
+
 class kPartitionNetwork: public cSimpleModule {
 protected:
     struct NodeInfo {

@@ -9,6 +9,10 @@
 #define PLACECONTROLLER_H_
 
 #include <omnetpp.h>
+using omnetpp::cSimpleModule;
+using omnetpp::simtime_t;
+using omnetpp::cTopology;
+using omnetpp::cMessage;
 
 class placeController : public cSimpleModule
 {

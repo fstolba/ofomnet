@@ -18,7 +18,7 @@
 
 package openflow.apps;
 
-import inet.applications.IPingApp;
+import inet.applications.contract.IPingApp;
 
 //PingAppRandom:
 // choses random destination node.
@@ -56,7 +56,7 @@ simple PingAppRandom like IPingApp
         double startTime @unit("s") = default(uniform(0s,this.interval)); // send first ping at startTime
         double stopTime @unit("s") = default(0s); // send no pings after stopTime, 0 means forever
         bool printPing = default(true); // dump on stdout
-        string destinationNedType = default("inet.nodes.inet.StandardHost");
+        string destinationNedType = default("inet.node.inet.StandardHost");
         @display("i=block/app");
         @signal[rtt](type=simtime_t);
         @signal[numLost](type=long);

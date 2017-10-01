@@ -98,5 +98,5 @@ EthernetIIFrame *Buffer::returnMessage(uint32_t buffer_id)
 
 void Buffer::handleMessage(cMessage *msg)
 {
-    opp_error("This module doesn't process messages");
+    throw omnetpp::cRuntimeError("This module doesn't process messages");
 }

@@ -9,13 +9,22 @@
 #include "OFP_Features_Reply_m.h"
 #include "IPv4Datagram.h"
 #include "ARPPacket_m.h"
-#include "IPvXAddressResolver.h"
+#include <Ieee802Ctrl_m.h>
+#include <L3AddressResolver.h>
 
 #define MSGKIND_CONNECT  0
 #define MSGKIND_SEND     1
 #define MSGKIND_FLOW_ENTRY_TIMER 2
 
 
+
+using inet::TCPSocket;
+using inet::TcpCommandCode::TCP_C_SEND;
+using inet::TCPDataTransferMode::TCP_TRANSFER_OBJECT;
+using inet::ETHERTYPE_ARP;
+using inet::ARPPacket;
+using inet::L3AddressResolver;
+using inet::L3Address;
 
 Define_Module(OFA_switch);
 
@@ -48,7 +57,7 @@ void OFA_switch::initialize()
     const char *address = par("address");
     int port = par("port");
     timeout = par("flow_timeout");
-    socket.bind(*address ? IPvXAddress(address) : IPvXAddress(), port);
+    socket.bind(*address ? IPv4Address(address) : IPv4Address(), port);
 
 
     socket.setOutputGate(gate("tcpOut"));
@@ -203,7 +212,7 @@ void OFA_switch::connect()
         connectAddress = getParentModule()->getParentModule()->getSubmodule("controller")->getFullPath().c_str();
     }
 
-    socket.connect(IPvXAddressResolver().resolve(connectAddress), connectPort);
+    socket.connect(L3AddressResolver().resolve(connectAddress).toIPv4(), connectPort);
 
 }
 

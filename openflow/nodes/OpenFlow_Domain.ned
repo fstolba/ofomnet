@@ -15,8 +15,8 @@
 
 package openflow.nodes;
 
-import inet.nodes.inet.StandardHost;
-import inet.util.ThruputMeteringChannel;
+import inet.node.inet.StandardHost;
+import inet.common.misc.ThruputMeteringChannel;
 import openflow.*;
 //
 // OpenFlow domain consisting of an OpenFlow switch and several hosts, but NO controller.

@@ -15,14 +15,19 @@
 #include "IPv4Address.h"
 #include <algorithm>
 #include "IRoutingTable.h"
+#include <IIPv4RoutingTable.h>
 #include "IInterfaceTable.h"
 #include "FlatNetworkConfigurator.h"
 #include "InterfaceEntry.h"
 #include "IPv4InterfaceData.h"
 #include <vector>
 
-class IInterfaceTable;
-class IRoutingTable;
+using inet::IInterfaceTable;
+using inet::IRoutingTable;
+using inet::IIPv4RoutingTable;
+
+//class IInterfaceTable;
+//class IRoutingTable;
 
 
 class Forwarding: public cSimpleModule, public cListener
@@ -41,7 +46,7 @@ protected:
         bool isIPNode;
         bool isOpenFlow;
         IInterfaceTable *ift;
-        IRoutingTable *rt;
+        IIPv4RoutingTable *rt;
         IPv4Address address;
         MACAddress macAddress;
         bool usesDefaultRoute;

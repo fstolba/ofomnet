@@ -17,8 +17,8 @@ package openflow.scenarios;
 
 import inet.nodes.ethernet.EtherSwitch;
 import inet.nodes.inet.Router;
-import inet.nodes.inet.StandardHost;
-import inet.util.ThruputMeteringChannel;
+import inet.node.inet.StandardHost;
+import inet.common.misc.ThruputMeteringChannel;
 import inet.networklayer.autorouting.ipv4.FlatNetworkConfigurator;
 
 import openflow.utility.kPartitionNetwork;

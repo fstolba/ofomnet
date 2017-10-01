@@ -17,6 +17,11 @@
 #include "list"
 
 using namespace std;
+using inet::TCPConnectInfo;
+using inet::TCPSocket;
+using inet::TCPCommand;
+using inet::TcpCommandCode::TCP_C_SEND;
+using inet::TCPDataTransferMode::TCP_TRANSFER_OBJECT;
 
 Define_Module(OFA_controller);
 
@@ -40,7 +45,7 @@ void OFA_controller::initialize()
     // TCP socket; listen on incoming connections
     socket1.setOutputGate(gate("tcpOut"));
     socket1.setDataTransferMode(TCP_TRANSFER_OBJECT);
-    socket1.bind(address[0] ? IPvXAddress(address) : IPvXAddress(), port);
+    socket1.bind(address[0] ? IPv4Address(address) : IPv4Address(), port);
     socket1.listen();
 
     PacketInSignalId = registerSignal("PacketIn");
@@ -54,7 +59,7 @@ TCPSocket *OFA_controller::findSocketFor(cMessage *msg)
 {
     TCPCommand *ind = dynamic_cast<TCPCommand *>(msg->getControlInfo());
     if (!ind)
-        opp_error("TCPSocketMap: findSocketFor(): no TCPCommand control info in message (not from TCP?)");
+        throw omnetpp::cRuntimeError("TCPSocketMap: findSocketFor(): no TCPCommand control info in message (not from TCP?)");
     int connId = ind->getConnId();
     SocketMap::iterator i = socketMap.find(connId);
     ASSERT(i==socketMap.end() || i->first==i->second->getConnectionId());
@@ -129,7 +134,7 @@ void OFA_controller::processQueuedMsg(cMessage *data_msg)
 
 
 
-            IPv4Address ip_src =  (IPv4Address) (info->getRemoteAddr().get4());
+            IPv4Address ip_src =  (IPv4Address) (info->getRemoteAddr().toIPv4());
             OF_Wrapper *wrapper = new OF_Wrapper();
             wrapper->connID = socket->getConnectionId();
             wrapper->ip_src = &ip_src;

@@ -14,6 +14,10 @@
 #include "EtherFrame_m.h"
 #include "IPv4Address.h"
 
+
+using inet::EthernetIIFrame;
+using inet::IPv4Address;
+
 class OF_Wrapper : public cObject
 {
 public:

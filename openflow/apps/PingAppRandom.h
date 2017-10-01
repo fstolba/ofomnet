@@ -18,7 +18,6 @@
 
 #include "INETDefs.h"
 
-#include "IPvXAddress.h"
 
 class PingPayload;
 

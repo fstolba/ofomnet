@@ -20,18 +20,18 @@
 package openflow.nodes;
 
 import inet.applications.pingapp.PingApp;
-import inet.applications.ITCPApp;
-import inet.base.NotificationBoard;
+import inet.applications.contract.ITCPApp;
+//import inet.base.NotificationBoard;
 import inet.linklayer.ethernet.EtherMAC;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.linklayer.ext.ExtInterface;
 import inet.linklayer.ppp.PPPInterface;
 import inet.networklayer.common.InterfaceTable;
-import inet.networklayer.ipv4.RoutingTable;
-import inet.transport.ITCP;
-import inet.transport.udp.UDP;
-import inet.util.TCPDump;
-import inet.nodes.inet.NetworkLayer;
+import inet.networklayer.ipv4.IPv4RoutingTable;
+import inet.transportlayer.contract.ITCP;
+import inet.transportlayer.udp.UDP;
+import inet.common.packet.TCPDump;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
 
 import openflow.*;
 // OpenFlow switch based on the OF Switch Specification 1.2.
@@ -64,21 +64,23 @@ module Open_Flow_Switch
         int numExtInterfaces = default(0);
         bool sendCompletePacket = default(false);
         double serviceTime @unit("s") = default(0s);
+        *.interfaceTableModule = default(absPath(".interfaceTable"));
+        *.routingTableModule = default(absPath(".routingTable"));
     gates:
         inout gate_controller[] @labels(Controller-conn);
         inout ethg[] @labels(EtherFrame-conn);
     submodules:
-        notificationBoard: NotificationBoard {
-            parameters:
-                @display("p=57,54");
-        }
+//        notificationBoard: NotificationBoard {
+//            parameters:
+//                @display("p=57,54");
+//        }
         interfaceTable: InterfaceTable {
             parameters:
                 @display("p=57,134");
         }
-        routingTable: RoutingTable {
+        routingTable: IPv4RoutingTable {
             parameters:
-                IPForward = IPForward;
+                //IPForward = IPForward;
                 routerId = "";
                 routingFile = routingFile;
                 @display("p=57,214");
@@ -87,7 +89,7 @@ module Open_Flow_Switch
             parameters:
                 @display("p=336,159");
         }
-        networkLayer: NetworkLayer {
+        networkLayer: IPv4NetworkLayer {
             parameters:
                 proxyARP = false;
                 @display("p=336,262;q=queue");
@@ -123,8 +125,8 @@ module Open_Flow_Switch
             sendCompletePacket = sendCompletePacket;
         }
     connections allowunconnected:
-        tcp.ipOut --> networkLayer.tcpIn;
-        tcp.ipIn <-- networkLayer.tcpOut;
+        //tcp.ipOut --> networkLayer.transportIn;
+        //tcp.ipIn <-- networkLayer.transportOut;
 
 
 

@@ -114,5 +114,5 @@ ofp_action_output *Flow_Table::returnAction(oxm_basic_match *match)
 }
 void Flow_Table::handleMessage(cMessage *msg)
 {
-    opp_error("This module doesn't process messages");
+    throw omnetpp::cRuntimeError("This module doesn't process messages");
 }

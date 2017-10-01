@@ -17,11 +17,11 @@ package openflow.scenarios;
 
 import inet.nodes.ethernet.EtherSwitch;
 import inet.nodes.inet.Router;
-import inet.nodes.inet.StandardHost;
+import inet.node.inet.StandardHost;
 import inet.networklayer.autorouting.ipv4.FlatNetworkConfigurator;
 import openflow.nodes.Open_Flow_Controller;
 import openflow.nodes.Open_Flow_Switch;
-import inet.util.ThruputMeteringChannel;
+import inet.common.misc.ThruputMeteringChannel;
 
 
 network Scenario_Forwarding

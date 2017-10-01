@@ -10,8 +10,12 @@
 
 #define OFP_VERSION   0x01
 
+#include "inet/networklayer/common/InterfaceEntry.h"
 #include <MACAddress.h>
 #include <IPv4Address.h>
+
+using inet::MACAddress;
+using inet::IPv4Address;
 
 struct oxm_basic_match {
     int OFB_IN_PORT;
@@ -254,7 +258,7 @@ struct ofp_packet_out {
     struct ofp_header header;
     uint32_t buffer_id; /* ID assigned by datapath (OFP_NO_BUFFER
      if none). */
-    uint32_t in_port; /* Packet’s input port or OFPP_CONTROLLER. */
+    uint32_t in_port; /* Packetï¿½s input port or OFPP_CONTROLLER. */
     uint16_t actions_len; /* Size of action array in bytes. */
     uint8_t pad[6];
     struct ofp_action_header actions[0]; /* Action list. */
@@ -288,10 +292,10 @@ enum ofp_port_no {
  (including flows with no output port). */
 };
 
-/* Action structure for OFPAT_OUTPUT, which sends packets out ’port’.
- * When the ’port’ is the OFPP_CONTROLLER, ’max_len’ indicates the max
- * number of bytes to send. A ’max_len’ of zero means no bytes of the
- * packet should be sent. A ’max_len’ of OFPCML_NO_BUFFER means that
+/* Action structure for OFPAT_OUTPUT, which sends packets out ï¿½portï¿½.
+ * When the ï¿½portï¿½ is the OFPP_CONTROLLER, ï¿½max_lenï¿½ indicates the max
+ * number of bytes to send. A ï¿½max_lenï¿½ of zero means no bytes of the
+ * packet should be sent. A ï¿½max_lenï¿½ of OFPCML_NO_BUFFER means that
  * the packet is not buffered and the complete packet is to be sent to
  * the controller. */
 class ofp_action_output: public ofp_action_header {

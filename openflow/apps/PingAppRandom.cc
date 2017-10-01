@@ -20,8 +20,7 @@
 
 #include "PingAppRandom.h"
 
-#include "IPvXAddressResolver.h"
-#include "PingPayload_m.h"
+
 #include "IPv4ControlInfo.h"
 #include "IPv6ControlInfo.h"
 

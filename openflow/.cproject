@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?fileVersion 4.0.0?>
-
-<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="org.omnetpp.cdt.gnu.config.debug.253490522">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.omnetpp.cdt.gnu.config.debug.253490522" moduleId="org.eclipse.cdt.core.settings" name="gcc-debug">
@@ -25,6 +23,26 @@
 							<builder id="org.omnetpp.cdt.gnu.builder.debug.1496996292" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="OMNeT++ Make Builder (opp_makemake)" superClass="org.omnetpp.cdt.gnu.builder.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1119945387" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.1825182768" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
+								<option id="gnu.cpp.compiler.option.include.paths.542309674" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/linklayer/ethernet}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/networklayer/contract}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/networklayer/configurator/ipv4}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/networklayer/ipv4}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/networklayer/common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/openflow}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/linklayer/common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/networklayer/contract/ipv4}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/networklayer/arp/ipv4}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/openflow/messages}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/transportlayer/contract/tcp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/applications/tcpapp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/openflow/ctrlApps}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/transportlayer/tcp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/common/serializer/headers}&quot;"/>
+									<listOptionValue builtIn="false" value="/opt/omnetpp/include/omnetpp"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.811035616" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.1733460392" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base">
@@ -42,9 +60,14 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="apps" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="inet;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
+			</storageModule>
 		</cconfiguration>
 		<cconfiguration id="org.omnetpp.cdt.gnu.config.release.44274421">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.omnetpp.cdt.gnu.config.release.44274421" moduleId="org.eclipse.cdt.core.settings" name="gcc-release">
@@ -68,6 +91,14 @@
 							<builder id="org.omnetpp.cdt.gnu.builder.release.1961626631" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="OMNeT++ Make Builder (opp_makemake)" superClass="org.omnetpp.cdt.gnu.builder.release"/>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.408894403" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.759959474" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
+								<option id="gnu.cpp.compiler.option.include.paths.1247398572" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="/opt/omnetpp/samples/inet/src/inet"/>
+									<listOptionValue builtIn="false" value="/opt/omnetpp/samples/inet/src/inet/linklayer/ethernet/"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/inet/src/inet/linklayer/ethernet}&quot;"/>
+									<listOptionValue builtIn="false" value="/opt/omnetpp/include/omnetpp"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.665463861" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.590605224" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base">
@@ -85,6 +116,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="apps" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
@@ -102,5 +136,14 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.omnetpp.cdt.OmnetppGCCPerProjectProfile"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="gcc-release">
+			<resource resourceType="PROJECT" workspacePath="/openflow"/>
+		</configuration>
+		<configuration configurationName="gcc-debug">
+			<resource resourceType="PROJECT" workspacePath="/openflow"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>

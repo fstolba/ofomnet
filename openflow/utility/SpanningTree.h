@@ -9,6 +9,9 @@
 #define SPANNINGTREE_H_
 
 #include <omnetpp.h>
+using omnetpp::cSimpleModule;
+using omnetpp::cTopology;
+using omnetpp::cMessage;
 
 class SpanningTree : public cSimpleModule
 {

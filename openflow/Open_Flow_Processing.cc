@@ -11,7 +11,8 @@
 #include <vector>
 
 using namespace std;
-
+using inet::ARPPacket;
+using inet::ETHERTYPE_ARP;
 
 Define_Module(Open_Flow_Processing);
 

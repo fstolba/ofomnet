@@ -10,13 +10,13 @@
 
 #include <omnetpp.h>
 #include <Buffer.h>
-#include <INotifiable.h>
 #include "TCPSocket.h"
 #include "openflow.h"
 #include "Open_Flow_Message_m.h"
 #include "Flow_Table.h"
 #include "Open_Flow_Processing.h"
 
+using inet::TCPSocket;
 
 class OFA_switch: public cSimpleModule, public cListener
 {

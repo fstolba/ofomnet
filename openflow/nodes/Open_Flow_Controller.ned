@@ -14,12 +14,13 @@
 // 
 
 package openflow.nodes;
-import inet.base.NotificationBoard;
+//import inet.base.NotificationBoard;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.networklayer.common.InterfaceTable;
-import inet.networklayer.ipv4.RoutingTable;
-import inet.nodes.inet.NetworkLayer;
-import inet.transport.ITCP;
+import inet.networklayer.ipv4.IPv4RoutingTable;
+import inet.networklayer.ipv4.IPv4NetworkLayer;
+//import inet.node.inet.NetworkLayer;
+import inet.transportlayer.contract.ITCP;
 
 import openflow.*;
 import openflow.ctrlApps.*;
@@ -46,21 +47,23 @@ module Open_Flow_Controller
         int numExtInterfaces = default(0);
         double serviceTime @unit("s") = default(0s);
         int domainID = default(-1);
+        *.interfaceTableModule = default(absPath(".interfaceTable"));
+        *.routingTableModule = default(absPath(".routingTable"));
 
     gates:
         inout ethg[] @labels(EtherFrame-conn);
     submodules:
-        notificationBoard: NotificationBoard {
-            parameters:
-                @display("p=57,54");
-        }
+//        notificationBoard: NotificationBoard {
+//            parameters:
+//                @display("p=57,54");
+//        }
         interfaceTable: InterfaceTable {
             parameters:
                 @display("p=57,134");
         }
-        routingTable: RoutingTable {
+        routingTable: IPv4RoutingTable {
             parameters:
-                IPForward = IPForward;
+               // IPForward = IPForward;
                 routerId = "";
                 routingFile = routingFile;
                 @display("p=57,214");
@@ -69,7 +72,7 @@ module Open_Flow_Controller
             parameters:
                 @display("p=169,154");
         }
-        networkLayer: NetworkLayer {
+        networkLayer: IPv4NetworkLayer {
             parameters:
                 proxyARP = false;
                 @display("p=336,230;q=queue");
@@ -89,8 +92,8 @@ module Open_Flow_Controller
             @display("p=331,57");
         }
     connections allowunconnected:
-        tcp.ipOut --> networkLayer.tcpIn;
-        tcp.ipIn <-- networkLayer.tcpOut;
+        //tcp.ipOut --> networkLayer.transportIn[0];
+        //tcp.ipIn <-- networkLayer.transportOut[0];
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;

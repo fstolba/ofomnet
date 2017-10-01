@@ -18,7 +18,6 @@
 #include "TCPCommand_m.h"
 #include "IPv4Datagram.h"
 #include <vector>
-#include "INotifiable.h"
 
 class Open_Flow_Processing : public cSimpleModule, public cListener
 {

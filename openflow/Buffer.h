@@ -14,6 +14,7 @@
 
 
 using namespace std;
+using inet::EthernetIIFrame;
 
 class Buffer : public cSimpleModule
 {

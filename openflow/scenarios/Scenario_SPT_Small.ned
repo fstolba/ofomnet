@@ -17,9 +17,9 @@ package openflow.scenarios;
 
 import inet.nodes.ethernet.EtherSwitch;
 import inet.nodes.inet.Router;
-import inet.nodes.inet.StandardHost;
+import inet.node.inet.StandardHost;
 import inet.networklayer.autorouting.ipv4.FlatNetworkConfigurator;
-import inet.util.ThruputMeteringChannel;
+import inet.common.misc.ThruputMeteringChannel;
 
 import openflow.nodes.*;
 import openflow.utility.SpanningTree;

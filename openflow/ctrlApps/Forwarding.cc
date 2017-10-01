@@ -5,7 +5,6 @@
 #include "OF_Wrapper.h"
 #include "OFA_controller.h"
 #include "Open_Flow_Message_m.h"
-#include "IPvXAddressResolver.h"
 
 #include <algorithm>
 #include "IRoutingTable.h"
@@ -16,10 +15,19 @@
 #include "EtherMAC.h"
 #include "IPv4Address.h"
 #include "ARPPacket_m.h"
+#include <L3AddressResolver.h>
 
 
 using namespace std;
-
+using inet::L3AddressResolver;
+using inet::IInterfaceTable;
+using inet::InterfaceEntry;
+using inet::TCPCommand;
+using inet::EtherMAC;
+using inet::ARPPacket;
+using inet::ETHERTYPE_ARP;
+using inet::ARP_REPLY;
+using inet::ARP_REQUEST;
 
 Define_Module(Forwarding);
 
@@ -85,7 +93,7 @@ bool selectFunctionForwarding(cModule *mod, void *v_ptr){
         domainID = mod->getParentModule()->par("domainID").longValue();
     }
 
-    return (strcmp(mod->getNedTypeName(),"inet.nodes.inet.StandardHost")==0 ||
+    return (strcmp(mod->getNedTypeName(),"inet.node.inet.StandardHost")==0 ||
             strcmp(mod->getNedTypeName(),"openflow.nodes.Open_Flow_Switch")==0) &&
             domainID==id;
 }
@@ -108,13 +116,13 @@ void  Forwarding::extractTopology(cTopology &topo, NodeInfoVector &nodeInfo)
     for (int i= 0; i< topo.getNumNodes(); i++)
     {
         cModule *mod = topo.getNode(i)->getModule();
-        nodeInfo[i].isIPNode = IPvXAddressResolver().findInterfaceTableOf(mod) != NULL;
+        nodeInfo[i].isIPNode = L3AddressResolver().findInterfaceTableOf(mod) != NULL;
         nodeInfo[i].isOpenFlow = (mod->findSubmodule("flow_Table")!=-1);
         nodeInfo[i].name = topo.getNode(i)->getModule()->getFullPath();
         if (nodeInfo[i].isIPNode)
         {
-            nodeInfo[i].ift = IPvXAddressResolver().interfaceTableOf(mod);
-            nodeInfo[i].rt = IPvXAddressResolver().routingTableOf(mod);
+            nodeInfo[i].ift = L3AddressResolver().interfaceTableOf(mod);
+            nodeInfo[i].rt = L3AddressResolver().routingTableOf(mod);
         }
         if (nodeInfo[i].isOpenFlow)
         {
@@ -179,7 +187,7 @@ void Forwarding::receiveSignal(cComponent *src, simsignal_t id, cObject *obj)
             TCPCommand *ind = dynamic_cast<TCPCommand *>(packet_in->getControlInfo());
 
             if (!ind)
-                opp_error("Switch: no TCPCommand control info in message (not from TCP?)");
+                throw omnetpp::cRuntimeError("Switch: no TCPCommand control info in message (not from TCP?)");
             int connID = ind->getConnId();
             EV <<  "connID: " << connID << endl;
 

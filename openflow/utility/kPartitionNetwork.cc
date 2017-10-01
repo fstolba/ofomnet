@@ -1,7 +1,7 @@
 #include "kPartitionNetwork.h"
 
 Define_Module(kPartitionNetwork);
-
+using namespace std;
 
 void kPartitionNetwork::initialize(int stage)
 {

@@ -14,7 +14,7 @@
 // 
 
 package openflow;
-import inet.util.ThruputMeteringChannel;
+import inet.common.misc.ThruputMeteringChannel;
 
 // uses the geographical distance between two nodes and calculates the delay.
 channel DistanceChannel extends ThruputMeteringChannel

@@ -14,6 +14,8 @@
 #include "OFP_Packet_In_m.h"
 
 
+using inet::TCPSocket;
+
 class OFA_controller: public cSimpleModule
 {
 public:

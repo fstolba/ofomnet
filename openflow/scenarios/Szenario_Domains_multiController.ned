@@ -17,7 +17,7 @@ package openflow.scenarios;
 
 import inet.nodes.ethernet.EtherSwitch;
 import inet.nodes.inet.Router;
-import inet.nodes.inet.StandardHost;
+import inet.node.inet.StandardHost;
 import inet.networklayer.autorouting.ipv4.FlatNetworkConfigurator;
 
 import openflow.nodes.*;

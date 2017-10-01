@@ -7,7 +7,7 @@
 #include "Open_Flow_Message_m.h"
 
 using namespace std;
-
+using inet::TCPCommand;
 
 Define_Module(Switch);
 
@@ -66,7 +66,7 @@ void Switch::receiveSignal(cComponent *src, simsignal_t id, cObject *obj)
         TCPCommand *ind = dynamic_cast<TCPCommand *>(packet_in->getControlInfo());
 
         if (!ind)
-            opp_error("Switch: no TCPCommand control info in message (not from TCP?)");
+            throw omnetpp::cRuntimeError("Switch: no TCPCommand control info in message (not from TCP?)");
         int connID = ind->getConnId();
         EV <<  "connID: " << connID << endl;
         MAC_connID m_c;
