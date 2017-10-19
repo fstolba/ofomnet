@@ -205,12 +205,13 @@ void OFA_switch::connect()
     const char *connectAddress = par("connectAddress");
     int connectPort = par("connectPort");
 
-
-    if (getParentModule()->getParentModule()->getSubmodule("controller") != NULL)
-    {
-        // multiple controllers; full path is needed for connect address
-        connectAddress = getParentModule()->getParentModule()->getSubmodule("controller")->getFullPath().c_str();
-    }
+//    TODO: this breaks scenario_small, full path results in binary junk
+//
+//    if (getParentModule()->getParentModule()->getSubmodule("controller") != NULL)
+//    {
+//        // multiple controllers; full path is needed for connect address
+//        connectAddress = getParentModule()->getParentModule()->getSubmodule("controller")->getFullPath().c_str();
+//    }
 
     socket.connect(L3AddressResolver().resolve(connectAddress).toIPv4(), connectPort);
 

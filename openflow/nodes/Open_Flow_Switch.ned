@@ -125,8 +125,8 @@ module Open_Flow_Switch
             sendCompletePacket = sendCompletePacket;
         }
     connections allowunconnected:
-        //tcp.ipOut --> networkLayer.transportIn;
-        //tcp.ipIn <-- networkLayer.transportOut;
+        tcp.ipOut --> networkLayer.transportIn++;
+        tcp.ipIn <-- networkLayer.transportOut++;
 
 
 
