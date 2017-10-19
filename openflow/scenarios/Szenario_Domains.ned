@@ -15,11 +15,11 @@
 
 package openflow.scenarios;
 
-import inet.nodes.ethernet.EtherSwitch;
-import inet.nodes.inet.Router;
+import inet.node.ethernet.EtherSwitch;
+import inet.node.inet.Router;
 import inet.node.inet.StandardHost;
 import inet.common.misc.ThruputMeteringChannel;
-import inet.networklayer.autorouting.ipv4.FlatNetworkConfigurator;
+import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
 
 import openflow.utility.kPartitionNetwork;
 import openflow.nodes.*;
