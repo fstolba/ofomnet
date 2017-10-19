@@ -30,7 +30,7 @@ import openflow.ctrlApps.*;
 module Open_Flow_Controller
 {
     parameters:
-        @node();
+        @networkNode(); // according to https://github.com/inet-framework/inet/issues/161
         @labels(node,ethernet-node);
         @display("i=device/server;bgb=843,453;i2=OpenFlow-Logo-small");
         int numTcpApps = default(0);

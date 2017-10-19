@@ -47,7 +47,7 @@ import openflow.*;
 module Open_Flow_Switch
 {
     parameters:
-        @node();
+        @networkNode();  // according to https://github.com/inet-framework/inet/issues/161
         @OF_Switch();
         @labels(node,ethernet-node);
         @display("i=device/switch;i2=OpenFlow-Logo-small");

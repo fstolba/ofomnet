@@ -15,10 +15,10 @@
 
 package openflow.scenarios;
 
-import inet.nodes.ethernet.EtherSwitch;
-import inet.nodes.inet.Router;
+import inet.node.ethernet.EtherSwitch;
+import inet.node.inet.Router;
 import inet.node.inet.StandardHost;
-import inet.networklayer.autorouting.ipv4.FlatNetworkConfigurator;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import openflow.nodes.Open_Flow_Controller;
 import openflow.nodes.Open_Flow_Switch;
 import inet.common.misc.ThruputMeteringChannel;
@@ -42,7 +42,7 @@ network Scenario_Forwarding
         server1: StandardHost {
             @display("p=58,443");
         }
-        configurator: FlatNetworkConfigurator {
+        configurator: IPv4NetworkConfigurator {
             parameters:
                 @display("p=280,454");
         }
