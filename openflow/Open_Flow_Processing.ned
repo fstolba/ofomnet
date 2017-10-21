@@ -23,6 +23,7 @@ package openflow;
 simple Open_Flow_Processing
 {
     parameters:
+        @signal[NF_NO_MATCH_FOUND];
         @display("i=block/arrival");
         double serviceTime @unit("s") = default(0s);
     gates:

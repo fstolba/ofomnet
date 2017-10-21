@@ -111,6 +111,7 @@ module Open_Flow_Switch
         }
 
         open_Flow_Processing: Open_Flow_Processing {
+            @signal[NF_NO_MATCH_FOUND];
             @display("p=192,262");
             serviceTime = serviceTime;
             gates:
