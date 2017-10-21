@@ -23,7 +23,7 @@ class OFA_switch: public cSimpleModule, public cListener
 public:
     OFA_switch();
     ~OFA_switch();
-    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj);
+    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details);
 
 
 

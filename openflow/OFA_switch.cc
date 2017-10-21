@@ -139,7 +139,9 @@ void OFA_switch::handleFeaturesRequestMessage(Open_Flow_Message *of_msg)
     socket.send(featuresReply);
 }
 
-void OFA_switch::receiveSignal(cComponent *src, simsignal_t id, cObject *obj)
+// https://omnetpp.org/doc/omnetpp/manual/
+// angepasst an 5.0 eventmodel
+void OFA_switch::receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details)
 {
     Enter_Method_Silent();
     //printNotificationBanner(category, details);
