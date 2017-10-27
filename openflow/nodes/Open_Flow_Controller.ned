@@ -92,8 +92,8 @@ module Open_Flow_Controller
             @display("p=331,57");
         }
     connections allowunconnected:
-        //tcp.ipOut --> networkLayer.transportIn[0];
-        //tcp.ipIn <-- networkLayer.transportOut[0];
+        tcp.ipOut --> networkLayer.transportIn++;
+        tcp.ipIn <-- networkLayer.transportOut++;
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;

@@ -18,7 +18,7 @@ package openflow.scenarios;
 import inet.node.ethernet.EtherSwitch;
 import inet.node.inet.Router;
 import inet.node.inet.StandardHost;
-import inet.networklayer.configurator.ipv4.FlatNetworkConfigurator;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
 import inet.common.misc.ThruputMeteringChannel;
 
 import openflow.nodes.*;
@@ -42,7 +42,7 @@ network Scenario_SPT_Small
         server1: StandardHost {
             @display("p=415,75");
         }
-        configurator: FlatNetworkConfigurator {
+        configurator: IPv4NetworkConfigurator {
             parameters:
                 @display("p=153,522");
         }

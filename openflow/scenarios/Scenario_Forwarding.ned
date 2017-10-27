@@ -44,6 +44,7 @@ network Scenario_Forwarding
         }
         configurator: IPv4NetworkConfigurator {
             parameters:
+                config = xml("<config><interface hosts='*' address='192.168.x.x' netmask='255.255.x.x'/></config>");
                 @display("p=280,454");
         }
         open_flow_switch: Open_Flow_Switch {
