@@ -14,6 +14,7 @@
 #include "OFP_Features_Reply_m.h"
 #include "Forwarding.h"
 #include "TCPConnection.h"
+#include "inet/networklayer/common/L3AddressResolver.h"
 #include "list"
 
 using namespace std;
@@ -22,6 +23,8 @@ using inet::TCPSocket;
 using inet::TCPCommand;
 using inet::TcpCommandCode::TCP_C_SEND;
 using inet::TCPDataTransferMode::TCP_TRANSFER_OBJECT;
+using inet::L3Address;
+using inet::L3AddressResolver;
 
 Define_Module(OFA_controller);
 
@@ -45,7 +48,8 @@ void OFA_controller::initialize()
     // TCP socket; listen on incoming connections
     socket1.setOutputGate(gate("tcpOut"));
     socket1.setDataTransferMode(TCP_TRANSFER_OBJECT);
-    socket1.bind(address[0] ? IPv4Address(address) : IPv4Address(), port);
+    socket1.bind(address[0] ? L3AddressResolver().resolve(address) : L3Address(), port);
+
     socket1.listen();
 
     PacketInSignalId = registerSignal("PacketIn");

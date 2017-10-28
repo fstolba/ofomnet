@@ -22,6 +22,9 @@ simple OFA_switch
 {
     parameters:
         @display("i=block/app");
+        @signal[NF_FLOOD_PACKET];
+        @signal[NF_SEND_PACKET];
+        @signal[NF_NO_MATCH_FOUND];
         string address = default("");
         int port = default(-1);
         string connectAddress = default("");
@@ -29,6 +32,7 @@ simple OFA_switch
         double startTime @unit("s") = default(0s);
         bool sendCompletePacket = default(false);
 		double flow_timeout @unit("s");
+		
     gates:
         input tcpIn @labels(TCPCommand/up);
         output tcpOut @labels(TCPCommand/down);

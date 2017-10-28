@@ -157,7 +157,7 @@ void Forwarding::assignAddresses(cTopology &topo, NodeInfoVector &nodeInfo)
 
 
 
-void Forwarding::receiveSignal(cComponent *src, simsignal_t id, cObject *obj)
+void Forwarding::receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details)
 {
     EV << "Received signal " << getSignalName(id) << " at module " << this->getFullName() << "." << endl;
     if (id == PacketInSignalId)

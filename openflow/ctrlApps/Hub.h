@@ -15,7 +15,7 @@ class Hub: public cSimpleModule, public cListener
 public:
     Hub();
     ~Hub();
-    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj);
+    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details);
 
 protected:
     virtual void initialize();

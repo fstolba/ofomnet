@@ -35,7 +35,7 @@ void Switch::initialize()
 }
 
 
-void Switch::receiveSignal(cComponent *src, simsignal_t id, cObject *obj)
+void Switch::receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details)
 {
     if (dynamic_cast<OF_Wrapper *>(obj) != NULL)
     {

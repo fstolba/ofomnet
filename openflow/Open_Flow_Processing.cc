@@ -177,7 +177,7 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
           }
  }
 
- void Open_Flow_Processing::receiveSignal(cComponent *src, simsignal_t id, cObject *obj)
+ void Open_Flow_Processing::receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details)
  {
      Enter_Method_Silent();
      //printNotificationBanner(category, details);

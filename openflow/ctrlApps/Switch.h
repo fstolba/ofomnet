@@ -30,7 +30,7 @@ class Switch: public cSimpleModule, public cListener
 public:
     Switch();
     ~Switch();
-    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj);
+    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details);
 
 protected:
     virtual void initialize();

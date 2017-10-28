@@ -25,7 +25,7 @@ public:
     void disablePorts(std::vector<int> ports);
     Open_Flow_Processing();
     ~Open_Flow_Processing();
-    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj);
+    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details);
 
 protected:
     Flow_Table *flow_table;

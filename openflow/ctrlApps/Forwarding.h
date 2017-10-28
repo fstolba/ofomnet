@@ -35,7 +35,7 @@ class Forwarding: public cSimpleModule, public cListener
 public:
     Forwarding();
     ~Forwarding();
-    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj);
+    void receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details);
 
 protected:
     virtual void initialize(int stage);

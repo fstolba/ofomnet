@@ -33,7 +33,7 @@ void Hub::initialize()
 
 // receive Packet-In signal from controller application;
 // flood all packets.
-void Hub::receiveSignal(cComponent *src, simsignal_t id, cObject *obj)
+void Hub::receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details)
 {
     EV << "Hub::receiveSignal" << endl;
 //    if(getSignalName(id)!="PacketIn")
