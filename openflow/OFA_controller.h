@@ -12,11 +12,13 @@
 #include "TCPSocket.h"
 #include "Open_Flow_Message_m.h"
 #include "OFP_Packet_In_m.h"
+#include "inet/common/scenario/IScriptable.h"
 
 
 using inet::TCPSocket;
+using inet::IScriptable;
 
-class OFA_controller: public cSimpleModule
+class OFA_controller: public cSimpleModule, public IScriptable
 {
 public:
     OFA_controller();
@@ -27,6 +29,8 @@ public:
     void sendFlowModMessage(ofp_flow_mod_command mod_com, oxm_basic_match *match, uint32_t outport, int connID);
     void handshake(cMessage *msg);
     TCPSocket *findSocketFor(cMessage *msg);
+    TCPSocket *findSocketFor(uint32_t connId);
+    void processCommand (const cXMLElement &node);
 
 
 

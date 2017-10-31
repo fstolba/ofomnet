@@ -5,6 +5,7 @@
 #include "openflow.h"
 #include "Open_Flow_Message_m.h"
 #include "Hub.h"
+#include "DropUnknown.h"
 #include "OF_Wrapper.h"
 #include "OFP_Packet_Out_m.h"
 #include "TCPCommand_m.h"
@@ -69,6 +70,14 @@ TCPSocket *OFA_controller::findSocketFor(cMessage *msg)
     ASSERT(i==socketMap.end() || i->first==i->second->getConnectionId());
     return (i==socketMap.end()) ? NULL : i->second;
 }
+
+TCPSocket *OFA_controller::findSocketFor(uint32_t connId)
+{
+    SocketMap::iterator i = socketMap.find(connId);
+    ASSERT(i==socketMap.end() || i->first==i->second->getConnectionId());
+    return (i==socketMap.end()) ? NULL : i->second;
+}
+
 
 void OFA_controller::handleMessage(cMessage *msg)
 {
@@ -289,4 +298,31 @@ void OFA_controller::sendFlowModMessage(ofp_flow_mod_command mod_com, oxm_basic_
 
     TCPSocket *socket = socketMap[connID];
     socket->send(flow_mod_msg);
+}
+
+void OFA_controller::processCommand(const cXMLElement &node) {
+    //MACAddressTable *target = dynamic_cast<MACAddressTable*>(getModuleByPath(node.getAttribute("target")));
+    //cModule *target = getModuleByPath(node.getAttribute("target"));
+
+    if (!strcmp(node.getAttribute("op"), "ofpfc_modify")) {
+        ofp_flow_mod_command mod_com = OFPFC_MODIFY;
+
+        oxm_basic_match *match = new oxm_basic_match();
+        if(node.getAttribute("src_mac") != nullptr && node.getAttribute("dst_mac") != nullptr) {
+            match->OFB_ETH_SRC = MACAddress(node.getAttribute("src_mac"));
+            match->OFB_ETH_DST = MACAddress(node.getAttribute("dst_mac"));
+            match->wildcards = (OFPFW_IN_PORT & OFPFW_DL_TYPE & OFPFW_DL_VLAN & OFPFW_NW_SRC_ALL & OFPFW_NW_DST_ALL);
+        } else if(node.getAttribute("src_ip") != nullptr && node.getAttribute("dst_ip") != nullptr) {
+            //match->OFB_ETH_SRC = IPv4Address(node.getAttribute("src_ip"));
+            match->OFB_IPV4_DST = IPv4Address(node.getAttribute("dst_ip"));
+            match->wildcards = (OFPFW_IN_PORT & OFPFW_DL_TYPE & OFPFW_DL_VLAN & OFPFW_DL_SRC & OFPFW_DL_DST);
+        }
+        uint32_t outport_i = atoi(node.getAttribute("outport"));
+        uint32_t connid_i = atoi(node.getAttribute("connid"));
+        if(this->findSocketFor(connid_i) == NULL)
+            throw omnetpp::cRuntimeError("Can't find Socket for connID.");
+
+        this->sendFlowModMessage(mod_com, match, outport_i, connid_i);
+
+    }
 }
