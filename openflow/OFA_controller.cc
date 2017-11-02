@@ -303,6 +303,7 @@ void OFA_controller::sendFlowModMessage(ofp_flow_mod_command mod_com, oxm_basic_
 void OFA_controller::processCommand(const cXMLElement &node) {
     //MACAddressTable *target = dynamic_cast<MACAddressTable*>(getModuleByPath(node.getAttribute("target")));
     //cModule *target = getModuleByPath(node.getAttribute("target"));
+    Enter_Method("Scenario Manager called");
 
     if (!strcmp(node.getAttribute("op"), "ofpfc_modify")) {
         ofp_flow_mod_command mod_com = OFPFC_MODIFY;
@@ -313,16 +314,34 @@ void OFA_controller::processCommand(const cXMLElement &node) {
             match->OFB_ETH_DST = MACAddress(node.getAttribute("dst_mac"));
             match->wildcards = (OFPFW_IN_PORT & OFPFW_DL_TYPE & OFPFW_DL_VLAN & OFPFW_NW_SRC_ALL & OFPFW_NW_DST_ALL);
         } else if(node.getAttribute("src_ip") != nullptr && node.getAttribute("dst_ip") != nullptr) {
-            //match->OFB_ETH_SRC = IPv4Address(node.getAttribute("src_ip"));
             match->OFB_IPV4_DST = IPv4Address(node.getAttribute("dst_ip"));
             match->wildcards = (OFPFW_IN_PORT & OFPFW_DL_TYPE & OFPFW_DL_VLAN & OFPFW_DL_SRC & OFPFW_DL_DST);
         }
         uint32_t outport_i = atoi(node.getAttribute("outport"));
-        uint32_t connid_i = atoi(node.getAttribute("connid"));
-        if(this->findSocketFor(connid_i) == NULL)
+        //uint32_t connid_i = atoi(node.getAttribute("connid"));
+        const char *peer = node.getAttribute("connid");
+        int32_t connid_i = this->findConnIDfor(peer);
+
+        if(connid_i == -1)
             throw omnetpp::cRuntimeError("Can't find Socket for connID.");
 
         this->sendFlowModMessage(mod_com, match, outport_i, connid_i);
 
     }
 }
+
+
+int OFA_controller::findConnIDfor(const char *hostname)
+{
+    L3Address peer = L3AddressResolver().resolve(hostname).toIPv4();
+
+    for(SocketMap::iterator i = socketMap.begin(); i != socketMap.end(); ++i) {
+
+        TCPSocket *s = i->second;
+        if(s->getRemoteAddress() == peer) {
+            return i->first;
+        }
+    }
+    return -1;
+}
+

@@ -13,10 +13,11 @@
 #include "Open_Flow_Message_m.h"
 #include "OFP_Packet_In_m.h"
 #include "inet/common/scenario/IScriptable.h"
-
+#include <simutil.h>
 
 using inet::TCPSocket;
 using inet::IScriptable;
+using omnetpp::cMethodCallContextSwitcher;
 
 class OFA_controller: public cSimpleModule, public IScriptable
 {
@@ -31,8 +32,7 @@ public:
     TCPSocket *findSocketFor(cMessage *msg);
     TCPSocket *findSocketFor(uint32_t connId);
     void processCommand (const cXMLElement &node);
-
-
+    int findConnIDfor(const char *hostname);
 
 protected:
     virtual void initialize();
