@@ -16,65 +16,94 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "INETDefs.h"
+#ifndef __INET_PINGAPPRANDOM_H
+#define __INET_PINGAPPRANDOM_H
 
+#include "inet/common/INETDefs.h"
+
+#include "inet/networklayer/common/L3Address.h"
+#include "inet/common/lifecycle/ILifecycle.h"
+#include "inet/common/lifecycle/LifecycleOperation.h"
+#include "inet/common/lifecycle/NodeStatus.h"
+
+namespace inet {
 
 class PingPayload;
 
 // how many ping request's send time is stored
-#define PING_HISTORY_SIZE 10
+#define PING_HISTORY_SIZE    100
 
 /**
  * Generates ping requests and calculates the packet loss and round trip
- * parameters of the replies. Uses cTopology class to get all available destinations
- * and chooses random one
+ * parameters of the replies.
  *
  * See NED file for detailed description of operation.
  */
-class PingAppRandom : public cSimpleModule
+class INET_API PingAppRandom : public cSimpleModule, public ILifecycle
 {
   protected:
-    virtual void initialize(int stage);
-    virtual int numInitStages() const { return 4; }
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
-
-  protected:
-    virtual void sendPing();
-    virtual void scheduleNextPing(cMessage *timer);
-    virtual void sendToICMP(cMessage *payload, const IPvXAddress& destAddr, const IPvXAddress& srcAddr, int hopLimit);
-    virtual void processPingResponse(PingPayload *msg);
-    virtual void countPingResponse(int bytes, long seqNo, simtime_t rtt);
-
-  protected:
-    // configuration
-    IPvXAddress destAddr;
-    IPvXAddress srcAddr;
-    int packetSize;
-    cPar *sendIntervalp;
-    int hopLimit;
-    int count;
+    // parameters: for more details, see the corresponding NED parameters' documentation
+    L3Address destAddr;
+    L3Address srcAddr;
+    std::vector<L3Address> destAddresses;
+    int packetSize = 0;
+    cPar *sendIntervalPar = nullptr;
+    cPar *sleepDurationPar = nullptr;
+    int hopLimit = 0;
+    int count = 0;
+    int destAddrIdx = -1;
     simtime_t startTime;
     simtime_t stopTime;
-    bool printPing;
-    cTopology topo;
-    const char *connectAddress;
+    bool printPing = false;
+    bool continuous = false;
 
     // state
-    long sendSeqNo;
-    long expectedReplySeqNo;
-    simtime_t sendTimeHistory[PING_HISTORY_SIZE];
+    int pid = 0;    // to determine which hosts are associated with the responses
+    cMessage *timer = nullptr;    // to schedule the next Ping request
+    NodeStatus *nodeStatus = nullptr;    // lifecycle
+    simtime_t lastStart;    // the last time when the app was started (lifecycle)
+    long sendSeqNo = 0;    // to match the response with the request that caused the response
+    long expectedReplySeqNo = 0;
+    simtime_t sendTimeHistory[PING_HISTORY_SIZE];    // times of when the requests were sent
 
     // statistics
     cStdDev rttStat;
     static simsignal_t rttSignal;
     static simsignal_t numLostSignal;
-    static simsignal_t outOfOrderArrivalsSignal;
+    static simsignal_t numOutOfOrderArrivalsSignal;
     static simsignal_t pingTxSeqSignal;
     static simsignal_t pingRxSeqSignal;
-    long lossCount;
-    long outOfOrderArrivalCount;
-    long numPongs;
+    long sentCount = 0;    // number of sent Ping requests
+    long lossCount = 0;    // number of lost requests
+    long outOfOrderArrivalCount = 0;    // number of responses which arrived too late
+    long numPongs = 0;    // number of received Ping requests
+
+  protected:
+    virtual void initialize(int stage) override;
+    virtual int numInitStages() const override { return NUM_INIT_STAGES; }
+    virtual void handleMessage(cMessage *msg) override;
+    virtual void finish() override;
+    virtual void refreshDisplay() const override;
+
+    virtual void parseDestAddressesPar();
+    virtual void startSendingPingRequests();
+    virtual void stopSendingPingRequests();
+    virtual void scheduleNextPingRequest(simtime_t previous, bool withSleep);
+    virtual void cancelNextPingRequest();
+    virtual bool isNodeUp();
+    virtual bool isEnabled();
+    virtual std::vector<L3Address> getAllAddresses();
+    virtual void sendPing();
+    virtual void processPingResponse(PingPayload *msg);
+    virtual void countPingResponse(int bytes, long seqNo, simtime_t rtt);
+
+    virtual bool handleOperationStage(LifecycleOperation *operation, int stage, IDoneCallback *doneCallback) override;
+
+  public:
+    PingAppRandom();
+    virtual ~PingAppRandom();
 };
 
+} // namespace inet
 
+#endif
