@@ -17,7 +17,6 @@
 #include "ARPPacket_m.h"
 #include <L3AddressResolver.h>
 
-
 using namespace std;
 using inet::L3AddressResolver;
 using inet::IInterfaceTable;
@@ -144,7 +143,7 @@ void Forwarding::assignAddresses(cTopology &topo, NodeInfoVector &nodeInfo)
             InterfaceEntry *ie = ift->getInterface(k);
             if (!ie->isLoopback())
             {
-                IPv4Address addr = ie->ipv4Data()->getIPAddress();
+                IPv4Address addr = ie->getIPv4Address();
                 nodeInfo[i].address = addr;
                 nodeInfo[i].macAddress = ie->getMacAddress();
                 break;
