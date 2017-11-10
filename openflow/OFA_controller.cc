@@ -17,6 +17,7 @@
 #include "TCPConnection.h"
 #include "inet/networklayer/common/L3AddressResolver.h"
 #include "list"
+#include <Ieee802Ctrl_m.h>
 
 using namespace std;
 using inet::TCPConnectInfo;
@@ -26,6 +27,7 @@ using inet::TcpCommandCode::TCP_C_SEND;
 using inet::TCPDataTransferMode::TCP_TRANSFER_OBJECT;
 using inet::L3Address;
 using inet::L3AddressResolver;
+using inet::EtherType;
 
 Define_Module(OFA_controller);
 
@@ -312,10 +314,9 @@ void OFA_controller::processCommand(const cXMLElement &node) {
         if(node.getAttribute("src_mac") != nullptr && node.getAttribute("dst_mac") != nullptr) {
             match->OFB_ETH_SRC = MACAddress(node.getAttribute("src_mac"));
             match->OFB_ETH_DST = MACAddress(node.getAttribute("dst_mac"));
-            match->wildcards = (OFPFW_IN_PORT & OFPFW_DL_TYPE & OFPFW_DL_VLAN & OFPFW_NW_SRC_ALL & OFPFW_NW_DST_ALL);
-        } else if(node.getAttribute("src_ip") != nullptr && node.getAttribute("dst_ip") != nullptr) {
-            match->OFB_IPV4_DST = IPv4Address(node.getAttribute("dst_ip"));
-            match->wildcards = (OFPFW_IN_PORT & OFPFW_DL_TYPE & OFPFW_DL_VLAN & OFPFW_DL_SRC & OFPFW_DL_DST);
+            // ipv4
+            match->OFB_ETH_TYPE = 0x0800;
+            match->wildcards = (OFPFW_IN_PORT);
         }
         uint32_t outport_i = atoi(node.getAttribute("outport"));
         //uint32_t connid_i = atoi(node.getAttribute("connid"));
