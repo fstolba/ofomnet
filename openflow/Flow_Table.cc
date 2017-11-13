@@ -68,7 +68,7 @@ bool Flow_Table::deleteEntry(oxm_basic_match *match)
 
         {
             entry_map.erase(iter);
-            delete match;
+            //delete match;
             size = entry_map.size();
 
             EV << "Number of entries in "<< this->getFullName()<< ":"  <<entry_map.size() << endl;

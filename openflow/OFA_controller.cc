@@ -288,7 +288,7 @@ void OFA_controller::sendFlowModMessage(ofp_flow_mod_command mod_com, oxm_basic_
     OFP_Flow_Mod *flow_mod_msg = new OFP_Flow_Mod("flow_mod");
     flow_mod_msg->getHeader().version = OFP_VERSION;
     flow_mod_msg->getHeader().type = OFPT_FLOW_MOD;
-    flow_mod_msg->setCommand(OFPFC_ADD);
+    flow_mod_msg->setCommand(mod_com);
     flow_mod_msg->setMatch(*match);
     flow_mod_msg->setByteLength(1);
     ofp_action_output *action_output = new ofp_action_output();

@@ -308,7 +308,6 @@ void OFA_switch::handleFlowModMessage(Open_Flow_Message *of_msg)
     OFP_Flow_Mod *flow_mod_msg = (OFP_Flow_Mod *) of_msg;
     oxm_basic_match *match = &flow_mod_msg->getMatch();
 
-
     // Construct unique name for flow entry timeout message
 
     ofp_action_output actions[1];
@@ -317,6 +316,9 @@ void OFA_switch::handleFlowModMessage(Open_Flow_Message *of_msg)
     flow_table_instructions *instruc = new flow_table_instructions;
     instruc->actions[0] = actions[0];
     data->instruc = instruc;
+    if(flow_mod_msg->getCommand() == OFPFC_MODIFY) {
+        flow_table->deleteEntry(match);
+    }
     flow_table->addEntry(match, data);
 
     oxm_basic_match *copy = new oxm_basic_match();
