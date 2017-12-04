@@ -69,11 +69,12 @@ module Open_Flow_Switch
     gates:
         inout gate_controller[] @labels(Controller-conn);
         inout ethg[] @labels(EtherFrame-conn);
+    
     submodules:
-//        notificationBoard: NotificationBoard {
-//            parameters:
-//                @display("p=57,54");
-//        }
+        //        notificationBoard: NotificationBoard {
+        //            parameters:
+        //                @display("p=57,54");
+        //        }
         interfaceTable: InterfaceTable {
             parameters:
                 @display("p=57,134");
@@ -94,19 +95,22 @@ module Open_Flow_Switch
                 proxyARP = false;
                 @display("p=336,262;q=queue");
             gates:
-                ifIn[sizeof(gate_controller)];
-                ifOut[sizeof(gate_controller)];
+                ifIn[sizeof(gate_controller)+numExtInterfaces];
+                ifOut[sizeof(gate_controller)+numExtInterfaces];
         }
         eth[sizeof(gate_controller)]: EthernetInterface {
             parameters:
-                @display("p=336,390,row,90;q=txQueue");
+                @display("p=263,392,row,90;q=txQueue");
+        }
+        ext[numExtInterfaces]: ExtInterface {
+            @display("p=492,383");
         }
         flow_Table: Flow_Table {
             @display("p=192,134");
         }
         etherMAC[sizeof(ethg)]: EtherMAC {
             parameters:
-                @display("p=192,383");
+                @display("p=105,383");
                 doRegisterAtIft = false;
         }
 
@@ -125,6 +129,7 @@ module Open_Flow_Switch
             @display("p=336,71");
             sendCompletePacket = sendCompletePacket;
         }
+
     connections allowunconnected:
         tcp.ipOut --> networkLayer.transportIn++;
         tcp.ipIn <-- networkLayer.transportOut++;
@@ -135,6 +140,11 @@ module Open_Flow_Switch
             eth[i].phys <--> gate_controller[i];
             eth[i].upperLayerOut --> networkLayer.ifIn[i];
             eth[i].upperLayerIn <-- networkLayer.ifOut[i];
+        }
+
+        for i=0..numExtInterfaces-1 {
+            ext[i].upperLayerOut --> networkLayer.ifIn[sizeof(gate_controller)+i];
+            ext[i].upperLayerIn <-- networkLayer.ifOut[sizeof(gate_controller)+i];
         }
 
         for i=0..sizeof(ethg)-1 {
