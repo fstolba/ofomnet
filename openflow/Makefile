@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for openflow
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -KINET_PROJ=../../inet -DINET_IMPORT -I/opt/omnetpp/samples/inet/src/inet -I/opt/omnetpp/samples/inet/src/inet/linklayer/ethernet/ -I$$\(INET_PROJ\) -I$$\(INET_PROJ\)/src/inet -I$$\(INET_PROJ\)/src/inet/linklayer/ethernet -I/opt/omnetpp/include/omnetpp -L$$\(INET_PROJ\)/src -lINET$$\(D\) -Xapps
+#  opp_makemake -f --deep -O out -KINET_PROJ=../../inet -DINET_IMPORT -I$$\(INET_PROJ\)/src/inet/linklayer/ethernet -I$$\(INET_PROJ\)/src/inet/networklayer/contract -I$$\(INET_PROJ\)/src/inet/networklayer/configurator/ipv4 -I$$\(INET_PROJ\)/src/inet/networklayer/ipv4 -I$$\(INET_PROJ\)/src/inet/networklayer/common -I$$\(INET_PROJ\)/src -I. -I$$\(INET_PROJ\)/src/inet/linklayer/common -I$$\(INET_PROJ\)/src/inet/networklayer/contract/ipv4 -I$$\(INET_PROJ\)/src/inet/networklayer/arp/ipv4 -Imessages -I$$\(INET_PROJ\)/src/inet/transportlayer/contract/tcp -I$$\(INET_PROJ\)/src/inet/applications/tcpapp -IctrlApps -I$$\(INET_PROJ\)/src/inet/common -I$$\(INET_PROJ\)/src/inet/transportlayer/tcp -I$$\(INET_PROJ\)/src/inet/common/serializer/headers -I/opt/omnetpp/include/omnetpp -L$$\(INET_PROJ\)/src -lINET$$\(D\) -Xapps
 #
 
 # Name of target to be created (-o option)
@@ -17,11 +17,23 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 
 # C++ include paths (with -I)
 INCLUDE_PATH = \
-    -I/opt/omnetpp/samples/inet/src/inet \
-    -I/opt/omnetpp/samples/inet/src/inet/linklayer/ethernet/ \
-    -I$(INET_PROJ) \
-    -I$(INET_PROJ)/src/inet \
     -I$(INET_PROJ)/src/inet/linklayer/ethernet \
+    -I$(INET_PROJ)/src/inet/networklayer/contract \
+    -I$(INET_PROJ)/src/inet/networklayer/configurator/ipv4 \
+    -I$(INET_PROJ)/src/inet/networklayer/ipv4 \
+    -I$(INET_PROJ)/src/inet/networklayer/common \
+    -I$(INET_PROJ)/src \
+    -I. \
+    -I$(INET_PROJ)/src/inet/linklayer/common \
+    -I$(INET_PROJ)/src/inet/networklayer/contract/ipv4 \
+    -I$(INET_PROJ)/src/inet/networklayer/arp/ipv4 \
+    -Imessages \
+    -I$(INET_PROJ)/src/inet/transportlayer/contract/tcp \
+    -I$(INET_PROJ)/src/inet/applications/tcpapp \
+    -IctrlApps \
+    -I$(INET_PROJ)/src/inet/common \
+    -I$(INET_PROJ)/src/inet/transportlayer/tcp \
+    -I$(INET_PROJ)/src/inet/common/serializer/headers \
     -I/opt/omnetpp/include/omnetpp
 
 # Additional object and library files to link with
