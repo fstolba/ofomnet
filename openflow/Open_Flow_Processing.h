@@ -48,6 +48,7 @@ private:
     simsignal_t NF_NO_MATCH_FOUND;
     simsignal_t NF_SEND_PACKET;
     simsignal_t NF_FLOOD_PACKET;
+    int queueIdx;
 };
 
 

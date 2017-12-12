@@ -24,6 +24,7 @@ import inet.applications.contract.ITCPApp;
 //import inet.base.NotificationBoard;
 import inet.linklayer.ethernet.EtherMAC;
 import inet.linklayer.ethernet.EthernetInterface;
+import inet.linklayer.ethernet.EtherMACFullDuplex;
 import inet.linklayer.ext.ExtInterface;
 import inet.linklayer.ppp.PPPInterface;
 import inet.networklayer.common.InterfaceTable;
@@ -32,6 +33,7 @@ import inet.transportlayer.contract.ITCP;
 import inet.transportlayer.udp.UDP;
 import inet.common.packet.TCPDump;
 import inet.networklayer.ipv4.IPv4NetworkLayer;
+import inet.common.queue.DropTailQueue;
 
 import openflow.*;
 // OpenFlow switch based on the OF Switch Specification 1.2.
@@ -66,10 +68,12 @@ module Open_Flow_Switch
         double serviceTime @unit("s") = default(0s);
         *.interfaceTableModule = default(absPath(".interfaceTable"));
         *.routingTableModule = default(absPath(".routingTable"));
+        bool hasqueue = default(true);
+
     gates:
         inout gate_controller[] @labels(Controller-conn);
         inout ethg[] @labels(EtherFrame-conn);
-    
+
     submodules:
         //        notificationBoard: NotificationBoard {
         //            parameters:
@@ -110,13 +114,15 @@ module Open_Flow_Switch
         }
         etherMAC[sizeof(ethg)]: EtherMAC {
             parameters:
-                @display("p=105,383");
+                @display("p=128,404");
                 doRegisterAtIft = false;
+                queueModule = (hasqueue ? "^.queue[index]" : "");
+                txQueueLimit = (hasqueue ? 1 : 10000);
         }
 
         open_Flow_Processing: Open_Flow_Processing {
             @signal[NF_NO_MATCH_FOUND];
-            @display("p=192,262");
+            @display("p=198,262");
             serviceTime = serviceTime;
             gates:
                 ifIn[sizeof(ethg)];
@@ -128,6 +134,11 @@ module Open_Flow_Switch
         ofa_switch: OFA_switch {
             @display("p=336,71");
             sendCompletePacket = sendCompletePacket;
+        }
+        queue[sizeof(ethg)]: DropTailQueue {
+            parameters:
+                frameCapacity = 1;
+                @display("p=57,323");
         }
 
     connections allowunconnected:
@@ -148,11 +159,15 @@ module Open_Flow_Switch
         }
 
         for i=0..sizeof(ethg)-1 {
-            etherMAC[i].phys <--> ethg[i];
+            ethg[i] <--> etherMAC[i].phys;
+            etherMAC[i].upperLayerOut --> queue[i].in;
+            queue[i].out --> open_Flow_Processing.ifIn[i];
             open_Flow_Processing.ifOut[i] --> etherMAC[i].upperLayerIn;
-            etherMAC[i].upperLayerOut --> open_Flow_Processing.ifIn[i];
-
-        }
+        } 
+        
+            
+        
+        
         tcp.appOut++ --> ofa_switch.tcpIn;
         ofa_switch.tcpOut --> tcp.appIn++;
 }

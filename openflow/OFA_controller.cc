@@ -5,7 +5,6 @@
 #include "openflow.h"
 #include "Open_Flow_Message_m.h"
 #include "Hub.h"
-#include "DropUnknown.h"
 #include "OF_Wrapper.h"
 #include "OFP_Packet_Out_m.h"
 #include "TCPCommand_m.h"

@@ -55,7 +55,6 @@ OBJS = \
     $O/OFA_controller.o \
     $O/OFA_switch.o \
     $O/Open_Flow_Processing.o \
-    $O/ctrlApps/DropUnknown.o \
     $O/ctrlApps/Forwarding.o \
     $O/ctrlApps/Hub.o \
     $O/ctrlApps/Switch.o \

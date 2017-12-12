@@ -10,9 +10,12 @@
 #include "Open_Flow_Processing.h"
 #include <vector>
 
+#include "inet/common/queue/IPassiveQueue.h"
+
 using namespace std;
 using inet::ARPPacket;
 using inet::ETHERTYPE_ARP;
+using inet::IPassiveQueue;
 
 Define_Module(Open_Flow_Processing);
 
@@ -45,6 +48,8 @@ void Open_Flow_Processing::initialize()
 
     busy = false;
     serviceTime = par("serviceTime");
+
+    queueIdx = 0;
  }
 
 // invoked by Spanning Tree module;
@@ -92,6 +97,15 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
              processQueuedMsg(data_msg);
              if (msg_list.empty())
              {
+                 cModule *tmp_queue = getParentModule()->getSubmodule("queue", queueIdx);
+                 IPassiveQueue *current_queue = check_and_cast<IPassiveQueue*>(tmp_queue);
+                 if(!current_queue->isEmpty()) {
+                     current_queue->requestPacket();
+                 }
+                 if(++queueIdx = gateSize("ifIn")) {
+                     queueIdx = 0;
+                 }
+
                  busy = false;
              }
              else
@@ -174,6 +188,8 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
                    }
 
 
+          } else {
+              EV << "test" << endl;
           }
  }
 
