@@ -37,10 +37,12 @@ void Open_Flow_Processing::initialize()
     NF_NO_MATCH_FOUND = registerSignal("NF_NO_MATCH_FOUND");
     NF_SEND_PACKET = registerSignal("NF_SEND_PACKET");
     NF_FLOOD_PACKET = registerSignal("NF_FLOOD_PACKET");
+    QUEUE_RCV_PKT = registerSignal("enqueuePk");
 
     getParentModule()->subscribe("NF_SEND_PACKET",this);
     getParentModule()->subscribe("NF_FLOOD_PACKET",this);
 
+    getParentModule()->subscribe("enqueuePk", this);
 
     WATCH_VECTOR(port_vector);
     // By default, all ports are enabled
@@ -97,16 +99,10 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
              processQueuedMsg(data_msg);
              if (msg_list.empty())
              {
-                 cModule *tmp_queue = getParentModule()->getSubmodule("queue", queueIdx);
-                 IPassiveQueue *current_queue = check_and_cast<IPassiveQueue*>(tmp_queue);
-                 if(!current_queue->isEmpty()) {
-                     current_queue->requestPacket();
-                 }
-                 if(++queueIdx = gateSize("ifIn")) {
-                     queueIdx = 0;
-                 }
+
 
                  busy = false;
+
              }
              else
              {
@@ -245,6 +241,23 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
          }
          take(frame);
          send(frame, "ifOut", outport);
+     }
+     if (id==QUEUE_RCV_PKT) {
+         for(int i=0; i < gateSize("ifIn"); i++) {
+             cModule *tmp_queue = getParentModule()->getSubmodule("queue", i);
+             IPassiveQueue *current_queue = check_and_cast<IPassiveQueue*>(tmp_queue);
+             if(!current_queue->isEmpty()) {
+                 EV << "found queued packet";
+                 current_queue->requestPacket();
+    //                 } else {
+    //                     cMessage *event = new cMessage("event");
+    //                     //event->setContextPointer(msgfromlist);
+    //                     scheduleAt(simTime()+serviceTime, event);
+             }
+         }
+//         if(++queueIdx == gateSize("ifIn")) {
+//             queueIdx = 0;
+//         }
      }
  }
 
