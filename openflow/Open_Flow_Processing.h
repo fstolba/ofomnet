@@ -35,6 +35,7 @@ protected:
     virtual void handleMessage(cMessage *msg);
     void sendPacketOut();
     void processQueuedMsg(cMessage *data_msg);
+    bool mac_free(int);
 
 private:
     EthernetIIFrame *frameBeingReceived;

@@ -112,7 +112,7 @@ module Open_Flow_Switch
         flow_Table: Flow_Table {
             @display("p=192,134");
         }
-        etherMAC[sizeof(ethg)]: EtherMAC {
+        etherMAC[sizeof(ethg)]: EtherMACFullDuplex {
             parameters:
                 @display("p=128,404");
                 doRegisterAtIft = false;

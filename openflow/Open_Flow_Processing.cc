@@ -9,6 +9,7 @@
 #include "NotifierConsts.h"
 #include "Open_Flow_Processing.h"
 #include <vector>
+#include "inet/linklayer/ethernet/EtherMACBase.h"
 
 #include "inet/common/queue/IPassiveQueue.h"
 
@@ -16,6 +17,7 @@ using namespace std;
 using inet::ARPPacket;
 using inet::ETHERTYPE_ARP;
 using inet::IPassiveQueue;
+using inet::EtherMACBase;
 
 Define_Module(Open_Flow_Processing);
 
@@ -170,8 +172,8 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
                        EV << "Found entry in flow table.\n" << endl;
                        ofp_action_output *action_output = flow_table->returnAction(match);
                        uint32_t outport = action_output->port;
-
-                       send(frameBeingReceived, "ifOut", outport);
+                       if(mac_free(outport))
+                           send(frameBeingReceived, "ifOut", outport);
                    }
                     else {
                         // lookup fail; notification to Switch Application module
@@ -189,6 +191,22 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
           }
  }
 
+ bool Open_Flow_Processing::mac_free(int index=-1) {
+     if(index==-1)
+         return true;
+
+     cModule *tmp_mac = getParentModule()->getSubmodule("etherMAC", index);
+     EtherMACBase *current_mac = check_and_cast<EtherMACBase*>(tmp_mac);
+     EtherMACBase::MACTransmitState current_state = current_mac->getTransmitState();
+     if(current_state == EtherMACBase::MACTransmitState::TX_IDLE_STATE) {
+         EV << "mac frei" << endl;
+         return true;
+     } else {
+         EV << "mac belegt" << endl;
+         return false;
+     }
+
+ }
  void Open_Flow_Processing::receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details)
  {
      Enter_Method_Silent();
@@ -217,7 +235,8 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
                      continue;
                  EthernetIIFrame *copy = frame->dup();
                  EV << "EthernetIIFrame ID: " << copy->getId() << endl;
-                 send(copy, "ifOut", i);
+                 if(mac_free(i))
+                     send(copy, "ifOut", i);
 //                 cDisplayString& connDispStr = getParentModule()->getParentModule()->gate("gate$o", i)->getDisplayString();
 //                             connDispStr.parse("ls=red");
              }
@@ -227,10 +246,12 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
      if (id==NF_SEND_PACKET)
      {
          // send packet on outport port
+
          OF_Wrapper *wrapper = (OF_Wrapper *) obj;
          uint32_t buffer_id = wrapper->buffer_id;
          uint16_t outport = wrapper->outport;
          EthernetIIFrame *frame;
+
          if (buffer_id == OFP_NO_BUFFER)
          {
              frame = wrapper->frame;
@@ -240,24 +261,25 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
              frame = buffer->returnMessage(buffer_id);
          }
          take(frame);
-         send(frame, "ifOut", outport);
+         if(mac_free(outport))
+             send(frame, "ifOut", outport);
      }
      if (id==QUEUE_RCV_PKT) {
-         for(int i=0; i < gateSize("ifIn"); i++) {
-             cModule *tmp_queue = getParentModule()->getSubmodule("queue", i);
+         // ruft die queues immer round robin ab
+         if(!busy) {
+             cModule *tmp_queue = getParentModule()->getSubmodule("queue", queueIdx);
              IPassiveQueue *current_queue = check_and_cast<IPassiveQueue*>(tmp_queue);
-             if(!current_queue->isEmpty()) {
-                 EV << "found queued packet";
-                 current_queue->requestPacket();
-    //                 } else {
-    //                     cMessage *event = new cMessage("event");
-    //                     //event->setContextPointer(msgfromlist);
-    //                     scheduleAt(simTime()+serviceTime, event);
+
+                 if(!current_queue->isEmpty()) {
+                     EV << "found queued packet";
+                           current_queue->requestPacket();
+                 }
+             if(++queueIdx == gateSize("ifIn")) {
+                 queueIdx = 0;
              }
+         } else {
+             EV << "processing busy" << endl;
          }
-//         if(++queueIdx == gateSize("ifIn")) {
-//             queueIdx = 0;
-//         }
      }
  }
 
