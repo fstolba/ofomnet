@@ -36,6 +36,7 @@ protected:
     void sendPacketOut();
     void processQueuedMsg(cMessage *data_msg);
     bool mac_free(int);
+    void request_frame_from_queue();
 
 private:
     EthernetIIFrame *frameBeingReceived;

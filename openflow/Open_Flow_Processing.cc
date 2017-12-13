@@ -102,7 +102,7 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
              if (msg_list.empty())
              {
 
-
+                 //request_frame_from_queue();
                  busy = false;
 
              }
@@ -207,6 +207,22 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
      }
 
  }
+
+ void Open_Flow_Processing::request_frame_from_queue() {
+     bool foundPacket = false;
+
+     for(int i = 0; i < gateSize("ifIn") && !foundPacket; i++) {
+
+         cModule *tmp_queue = getParentModule()->getSubmodule("queue", (queueIdx + i) % gateSize("ifIn"));
+         IPassiveQueue *current_queue = check_and_cast<IPassiveQueue*>(tmp_queue);
+         if(!current_queue->isEmpty()) {
+             foundPacket = true;
+             EV << "found queued packet";
+             current_queue->requestPacket();
+             queueIdx = ((queueIdx + i) % gateSize("ifIn"))  + 1;
+         }
+     }
+ }
  void Open_Flow_Processing::receiveSignal(cComponent *src, simsignal_t id, cObject *obj, cObject *details)
  {
      Enter_Method_Silent();
@@ -267,16 +283,7 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
      if (id==QUEUE_RCV_PKT) {
          // ruft die queues immer round robin ab
          if(!busy) {
-             cModule *tmp_queue = getParentModule()->getSubmodule("queue", queueIdx);
-             IPassiveQueue *current_queue = check_and_cast<IPassiveQueue*>(tmp_queue);
-
-                 if(!current_queue->isEmpty()) {
-                     EV << "found queued packet";
-                           current_queue->requestPacket();
-                 }
-             if(++queueIdx == gateSize("ifIn")) {
-                 queueIdx = 0;
-             }
+             request_frame_from_queue();
          } else {
              EV << "processing busy" << endl;
          }
