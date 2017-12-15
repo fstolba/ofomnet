@@ -96,32 +96,39 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
          // self message to implement service time
          if (msg->isSelfMessage())
          {
-             cMessage *data_msg = (cMessage *) msg->getContextPointer();
-             delete msg;
-             processQueuedMsg(data_msg);
-             if (msg_list.empty())
-             {
+             if(!strcmp(msg->getName(),"queue_wackeln")) {
+                 if(!busy) {
+                     request_frame_from_queue();
+                 }
+                 EV << "foobar" << endl;
+             } else {
+                 cMessage *data_msg = (cMessage *) msg->getContextPointer();
+                 delete msg;
+                 processQueuedMsg(data_msg);
+                 if (msg_list.empty())
+                 {
 
-                 //request_frame_from_queue();
-                 busy = false;
+                     //request_frame_from_queue();
+                     busy = false;
 
-             }
-             else
-             {
-                 cMessage *msgfromlist = msg_list.front();
-                 msg_list.pop_front();
-                 char buf[80];
-                 sprintf(buf, " %d pakets in queue", msg_list.size());
-                 getParentModule()->getDisplayString().setTagArg("t", 0, buf);
-                 std::list<cMessage *>::iterator i = msg_list.begin();
-                     while (i!=msg_list.end())
-                     {
-                         EV << (*i)->getFullPath() << endl;
-                         i++;
-                     }
-                 cMessage *event = new cMessage("event");
-                 event->setContextPointer(msgfromlist);
-                 scheduleAt(simTime()+serviceTime, event);
+                 }
+                 else
+                 {
+                     cMessage *msgfromlist = msg_list.front();
+                     msg_list.pop_front();
+                     char buf[80];
+                     sprintf(buf, " %d pakets in queue", msg_list.size());
+                     getParentModule()->getDisplayString().setTagArg("t", 0, buf);
+                     std::list<cMessage *>::iterator i = msg_list.begin();
+                         while (i!=msg_list.end())
+                         {
+                             EV << (*i)->getFullPath() << endl;
+                             i++;
+                         }
+                     cMessage *event = new cMessage("event");
+                     event->setContextPointer(msgfromlist);
+                     scheduleAt(simTime()+serviceTime, event);
+                 }
              }
          }
          else
@@ -282,11 +289,14 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
      }
      if (id==QUEUE_RCV_PKT) {
          // ruft die queues immer round robin ab
-         if(!busy) {
-             request_frame_from_queue();
-         } else {
-             EV << "processing busy" << endl;
-         }
+         cMessage *event = new cMessage("queue_wackeln");
+         scheduleAt(simTime()+0.02, event);
+
+//         if(!busy) {
+//             request_frame_from_queue();
+//         } else {
+//             EV << "processing busy" << endl;
+//         }
      }
  }
 

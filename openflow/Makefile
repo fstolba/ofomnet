@@ -2,12 +2,11 @@
 # OMNeT++/OMNEST Makefile for openflow
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -O out -KINET_PROJ=../../inet -DINET_IMPORT -I$$\(INET_PROJ\)/src/inet/linklayer/ethernet -I$$\(INET_PROJ\)/src/inet/networklayer/contract -I$$\(INET_PROJ\)/src/inet/networklayer/configurator/ipv4 -I$$\(INET_PROJ\)/src/inet/networklayer/ipv4 -I$$\(INET_PROJ\)/src/inet/networklayer/common -I$$\(INET_PROJ\)/src -I. -I$$\(INET_PROJ\)/src/inet/linklayer/common -I$$\(INET_PROJ\)/src/inet/networklayer/contract/ipv4 -I$$\(INET_PROJ\)/src/inet/networklayer/arp/ipv4 -Imessages -I$$\(INET_PROJ\)/src/inet/transportlayer/contract/tcp -I$$\(INET_PROJ\)/src/inet/applications/tcpapp -IctrlApps -I$$\(INET_PROJ\)/src/inet/common -I$$\(INET_PROJ\)/src/inet/transportlayer/tcp -I$$\(INET_PROJ\)/src/inet/common/serializer/headers -I/opt/omnetpp/include/omnetpp -L$$\(INET_PROJ\)/src -lINET$$\(D\) -Xapps
+#  opp_makemake -f --deep -O out -KINET_PROJ=../../inet -DINET_IMPORT -I$$\(INET_PROJ\)/src/inet/linklayer/ethernet -I$$\(INET_PROJ\)/src/inet/networklayer/contract -I$$\(INET_PROJ\)/src/inet/networklayer/configurator/ipv4 -I$$\(INET_PROJ\)/src/inet/networklayer/ipv4 -I$$\(INET_PROJ\)/src/inet/networklayer/common -I$$\(INET_PROJ\)/src -I. -I$$\(INET_PROJ\)/src/inet/linklayer/common -I$$\(INET_PROJ\)/src/inet/networklayer/contract/ipv4 -I$$\(INET_PROJ\)/src/inet/networklayer/arp/ipv4 -Imessages -I$$\(INET_PROJ\)/src/inet/transportlayer/contract/tcp -I$$\(INET_PROJ\)/src/inet/applications/tcpapp -IctrlApps -I$$\(INET_PROJ\)/src/inet/common -I$$\(INET_PROJ\)/src/inet/transportlayer/tcp -I$$\(INET_PROJ\)/src/inet/common/serializer/headers -I/opt/omnetpp/include/omnetpp -L$$\(INET_PROJ\)/out/$$\(CONFIGNAME\)/src -lINET -Xapps
 #
 
 # Name of target to be created (-o option)
-TARGET = openflow$(D)$(EXE_SUFFIX)
-TARGET_DIR = .
+TARGET = openflow$(EXE_SUFFIX)
 
 # User interface (uncomment one) (-u option)
 USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LIBS)
@@ -40,7 +39,7 @@ INCLUDE_PATH = \
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)$(INET_PROJ)/src  -lINET$(D)
+LIBS = $(LDFLAG_LIBPATH)$(INET_PROJ)/out/$(CONFIGNAME)/src  -lINET
 
 # Output directory
 PROJECT_OUTPUT_DIR = out
@@ -106,7 +105,7 @@ include $(CONFIGFILE)
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
 ifneq ($(TOOLCHAIN_NAME),clangc2)
-LIBS += -Wl,-rpath,$(abspath $(INET_PROJ)/src)
+LIBS += -Wl,-rpath,$(abspath $(INET_PROJ)/out/$(CONFIGNAME)/src)
 endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
@@ -128,14 +127,8 @@ endif
 #------------------------------------------------------------------------------
 
 # Main target
-all: $(TARGET_DIR)/$(TARGET)
-
-$(TARGET_DIR)/% :: $O/%
-	@mkdir -p $(TARGET_DIR)
-	$(Q)$(LN) $< $@
-ifeq ($(TOOLCHAIN_NAME),clangc2)
-	$(Q)-$(LN) $(<:%.dll=%.lib) $(@:%.dll=%.lib)
-endif
+all: $O/$(TARGET)
+	$(Q)$(LN) $O/$(TARGET) .
 
 $O/$(TARGET): $(OBJS)  $(wildcard $(EXTRA_OBJS)) Makefile $(CONFIGFILE)
 	@$(MKPATH) $O
@@ -164,15 +157,12 @@ msgheaders: $(MSGFILES:.msg=_m.h)
 smheaders: $(SMFILES:.sm=_sm.h)
 
 clean:
-	$(qecho) Cleaning $(TARGET)
+	$(qecho) Cleaning...
 	$(Q)-rm -rf $O
-	$(Q)-rm -f $(TARGET_DIR)/$(TARGET)
-	$(Q)-rm -f $(TARGET_DIR)/$(TARGET:%.dll=%.lib)
+	$(Q)-rm -f $(TARGET)
 	$(Q)-rm -f $(call opp_rwildcard, . , *_m.cc *_m.h *_sm.cc *_sm.h)
 
-cleanall:
-	$(Q)$(MAKE) -s clean MODE=release
-	$(Q)$(MAKE) -s clean MODE=debug
+cleanall: clean
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
 
 # include all dependencies
