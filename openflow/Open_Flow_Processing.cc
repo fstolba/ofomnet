@@ -267,15 +267,12 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
      if (id==QUEUE_RCV_PKT) {
          // ruft die queues immer round robin ab
          if(!busy) {
-             cModule *tmp_queue = getParentModule()->getSubmodule("queue", queueIdx);
-             IPassiveQueue *current_queue = check_and_cast<IPassiveQueue*>(tmp_queue);
-
-                 if(!current_queue->isEmpty()) {
-                     EV << "found queued packet";
-                           current_queue->requestPacket();
-                 }
-             if(++queueIdx == gateSize("ifIn")) {
-                 queueIdx = 0;
+             IPassiveQueue *current_queue = check_and_cast<IPassiveQueue*>(src);
+             if(!current_queue->isEmpty()) {
+                 EV << "found queued packet" << endl;
+                       current_queue->requestPacket();
+             } else {
+                 EV << "queue empty" << endl;
              }
          } else {
              EV << "processing busy" << endl;
