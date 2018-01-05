@@ -27,7 +27,6 @@ Open_Flow_Processing::Open_Flow_Processing()
 }
 
 Open_Flow_Processing::~Open_Flow_Processing() {
-
 }
 void Open_Flow_Processing::initialize()
  {
@@ -101,10 +100,7 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
              processQueuedMsg(data_msg);
              if (msg_list.empty())
              {
-
-
                  busy = false;
-
              }
              else
              {
@@ -136,7 +132,6 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
              {
 
                  busy = true;
-
                  cMessage *event = new cMessage("event");
                  event->setContextPointer(msg);
                  scheduleAt(simTime()+serviceTime, event);
@@ -172,8 +167,12 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
                        EV << "Found entry in flow table.\n" << endl;
                        ofp_action_output *action_output = flow_table->returnAction(match);
                        uint32_t outport = action_output->port;
-                       if(mac_free(outport))
+                       if(mac_free(outport)) {
                            send(frameBeingReceived, "ifOut", outport);
+                       } else {
+                           drop(frameBeingReceived);
+                           delete(frameBeingReceived);
+                       }
                    }
                     else {
                         // lookup fail; notification to Switch Application module
@@ -235,8 +234,12 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
                      continue;
                  EthernetIIFrame *copy = frame->dup();
                  EV << "EthernetIIFrame ID: " << copy->getId() << endl;
-                 if(mac_free(i))
+                 if(mac_free(i)) {
                      send(copy, "ifOut", i);
+                 } else  {
+                     delete(copy);
+                     delete(copy);
+                 }
 //                 cDisplayString& connDispStr = getParentModule()->getParentModule()->gate("gate$o", i)->getDisplayString();
 //                             connDispStr.parse("ls=red");
              }
@@ -261,8 +264,13 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
              frame = buffer->returnMessage(buffer_id);
          }
          take(frame);
-         if(mac_free(outport))
+         if(mac_free(outport)) {
              send(frame, "ifOut", outport);
+         } else {
+             drop(frame);
+             delete(frame);
+         }
+
      }
      if (id==QUEUE_RCV_PKT) {
          // ruft die queues immer round robin ab
