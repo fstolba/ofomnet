@@ -65,7 +65,7 @@ module Open_Flow_Switch
         string routingFile = default("");
         int numExtInterfaces = default(0);
         bool sendCompletePacket = default(false);
-        double serviceTime @unit("s") = default(0s);
+        double serviceTime @unit("s") = default(100us);
         *.interfaceTableModule = default(absPath(".interfaceTable"));
         *.routingTableModule = default(absPath(".routingTable"));
         bool hasqueue = default(true);
@@ -114,10 +114,8 @@ module Open_Flow_Switch
         }
         etherMAC[sizeof(ethg)]: EtherMACFullDuplex {
             parameters:
-                @display("p=128,404");
+                //@display("p=128,404");
                 doRegisterAtIft = false;
-                queueModule = (hasqueue ? "^.queue[index]" : "");
-                txQueueLimit = (hasqueue ? 1 : 10000);
         }
 
         open_Flow_Processing: Open_Flow_Processing {
@@ -138,7 +136,7 @@ module Open_Flow_Switch
         queue[sizeof(ethg)]: DropTailQueue {
             parameters:
                 frameCapacity = 1;
-                @display("p=57,323");
+                //@display("p=57,323");
         }
 
     connections allowunconnected:

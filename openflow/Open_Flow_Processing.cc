@@ -130,8 +130,19 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
              }
              else
              {
+                 EV << this->getParentModule()->getFullPath() << ": Open_Flow_Processing empty" << endl;
+                 IPassiveQueue *thisqueue;
+                 for(int n = 0; n < gateSize("ifIn"); n++) {
+                     cModule *temp = this->getParentModule()->getSubmodule("queue", n);
+                     if(temp != nullptr) {
+                         thisqueue = check_and_cast<IPassiveQueue*>(temp);
+                         if(!thisqueue->isEmpty()) {
+                             thisqueue->requestPacket();
+                             break;
+                         }
+                     }
+                 }
 
-                 busy = true;
                  cMessage *event = new cMessage("event");
                  event->setContextPointer(msg);
                  scheduleAt(simTime()+serviceTime, event);
@@ -168,10 +179,12 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
                        ofp_action_output *action_output = flow_table->returnAction(match);
                        uint32_t outport = action_output->port;
                        if(mac_free(outport)) {
+                           take(frameBeingReceived);
                            send(frameBeingReceived, "ifOut", outport);
                        } else {
-                           drop(frameBeingReceived);
-                           delete(frameBeingReceived);
+
+                           EV_WARN << this->getParentModule()->getFullPath() << ": requeueing frame " << frameBeingReceived->getId() << endl;
+                           msg_list.push_back(frameBeingReceived);
                        }
                    }
                     else {
@@ -198,10 +211,10 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
      EtherMACBase *current_mac = check_and_cast<EtherMACBase*>(tmp_mac);
      EtherMACBase::MACTransmitState current_state = current_mac->getTransmitState();
      if(current_state == EtherMACBase::MACTransmitState::TX_IDLE_STATE) {
-         EV << "mac frei" << endl;
+         EV << this->getFullPath() << ": mac frei" << endl;
          return true;
      } else {
-         EV << "mac belegt" << endl;
+         EV_WARN << this->getFullPath() << ": mac belegt" << endl;
          return false;
      }
 
@@ -237,8 +250,8 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
                  if(mac_free(i)) {
                      send(copy, "ifOut", i);
                  } else  {
-                     delete(copy);
-                     delete(copy);
+                     EV_WARN << this->getParentModule()->getFullPath() << ": requeueing frame " << copy->getId() << endl;
+                     msg_list.push_back(copy);
                  }
 //                 cDisplayString& connDispStr = getParentModule()->getParentModule()->gate("gate$o", i)->getDisplayString();
 //                             connDispStr.parse("ls=red");
@@ -267,23 +280,22 @@ void Open_Flow_Processing::disablePorts(vector<int> ports)
          if(mac_free(outport)) {
              send(frame, "ifOut", outport);
          } else {
-             drop(frame);
-             delete(frame);
+
+             EV_WARN << this->getParentModule()->getFullPath() << ": requeueing frame " << frame->getId() << endl;
+             msg_list.push_back(frame);
          }
 
      }
      if (id==QUEUE_RCV_PKT) {
-         // ruft die queues immer round robin ab
          if(!busy) {
              IPassiveQueue *current_queue = check_and_cast<IPassiveQueue*>(src);
+
              if(!current_queue->isEmpty()) {
                  EV << "found queued packet" << endl;
                        current_queue->requestPacket();
              } else {
                  EV << "queue empty" << endl;
              }
-         } else {
-             EV << "processing busy" << endl;
          }
      }
  }
